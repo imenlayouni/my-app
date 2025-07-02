@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication</title>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script>tailwind.config={theme:{extend:{colors:{primary:'#4f46e5',secondary:'#a78bfa'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+    <style>
+        :where([class^="ri-"])::before { content: "\f3c2"; }
+        .auth-input {
+            @apply w-full px-4 py-3 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all;
+        }
+        .auth-input-icon {
+            @apply absolute left-3 top-1/2 -translate-y-1/2 text-gray-400;
+        }
+        .auth-btn {
+            @apply w-full py-3 bg-primary text-white font-medium !rounded-button transition-all hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/20 whitespace-nowrap;
+        }
+        
+        .google-btn {
+             @apply flex items-center justify-center gap-3 w-full py-3 border border-gray-200 rounded-button font-medium transition-all hover:bg-gray-50 whitespace-nowrap;
+}
+
+        .toggle-btn {
+            @apply px-6 py-2 font-medium transition-all whitespace-nowrap;
+        }
+        .toggle-btn.active {
+            @apply bg-primary text-white;
+        }
+        .custom-checkbox {
+            @apply appearance-none h-5 w-5 border border-gray-300 rounded bg-white checked:bg-primary checked:border-primary focus:outline-none transition-all cursor-pointer relative;
+        }
+        .custom-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 40%;
+            top: 20%;
+            width: 25%;
+            height: 50%;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg) translate(-50%, -50%);
+        }
+        .password-toggle {
+            @apply absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
+        <!-- Toggle Buttons -->
+        <div class="flex items-center justify-center p-4 bg-gray-100">
+            <div class="flex bg-white p-1 rounded-full shadow-sm">
+                <button id="login-toggle" class="toggle-btn active !rounded-full">Log In</button>
+                <button id="signup-toggle" class="toggle-btn !rounded-full">Sign Up</button>
+            </div>
+        </div>
+
+        <!-- Logo -->
+        <div class="pt-6 pb-2 flex justify-center">
+            
+            <img src="axia.png" width="30%" height="20%">
+        </div>
+
+        <!-- Form Container -->
+        <div class="p-8">
+            <!-- Login Form -->
+            <div id="login-form" class="space-y-6">
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Welcome Back</h2>
+                    <p class="text-gray-500 mt-1">Please enter your credentials to log in</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="relative">
+                        <div class="w-10 h-10 flex items-center justify-center auth-input-icon">
+                            <i class="ri-user-line"></i>
+                        </div>
+                        <input type="email" placeholder="Email or username" class="auth-input pl-10" required>
+                    </div>
+
+                    <div class="relative">
+                        <div class="w-10 h-10 flex items-center justify-center auth-input-icon">
+                            <i class="ri-lock-line"></i>
+                        </div>
+                        <input type="password" id="login-password" placeholder="Password" class="auth-input pl-10" required>
+                        <div class="w-10 h-10 flex items-center justify-center password-toggle" id="login-password-toggle">
+                            <i class="ri-eye-line"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember-me" class="custom-checkbox">
+                            <label for="remember-me" class="ml-2 text-sm text-gray-600 cursor-pointer">Remember me</label>
+                        </div>
+                        <a href="#" class="text-sm text-primary hover:text-primary/80">Forgot password?</a>
+                    </div>
+                </div>
+
+                <button class="auth-btn">Log In</button>
+
+                <div class="relative flex items-center justify-center">
+                    <div class="border-t border-gray-200 absolute w-full"></div>
+                    <span class="bg-white px-4 text-sm text-gray-500 relative">or continue with</span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3">
+                            <button class="google-btn">
+            <div class="w-5 h-5 flex items-center justify-center">
+                <i class="ri-google-fill"></i>
+            </div>
+            <span>Continue with Google</span>
+            </button>
+
+                </div>
+            </div>
+
+            <!-- Signup Form (Hidden by default) -->
+            <div id="signup-form" class="space-y-6 hidden">
+                <div class="text-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Create Account</h2>
+                    <p class="text-gray-500 mt-1">Please fill in your information to sign up</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="relative">
+                        <div class="w-10 h-10 flex items-center justify-center auth-input-icon">
+                            <i class="ri-user-line"></i>
+                        </div>
+                        <input type="text" placeholder="Full name" class="auth-input pl-10" required>
+                    </div>
+
+                    <div class="relative">
+                        <div class="w-10 h-10 flex items-center justify-center auth-input-icon">
+                            <i class="ri-mail-line"></i>
+                        </div>
+                        <input type="email" placeholder="Email address" class="auth-input pl-10" required>
+                    </div>
+
+                    <div class="relative">
+                        <div class="w-10 h-10 flex items-center justify-center auth-input-icon">
+                            <i class="ri-lock-line"></i>
+                        </div>
+                        <input type="password" id="signup-password" placeholder="Password" class="auth-input pl-10" required>
+                        <div class="w-10 h-10 flex items-center justify-center password-toggle" id="signup-password-toggle">
+                            <i class="ri-eye-line"></i>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <div class="w-10 h-10 flex items-center justify-center auth-input-icon">
+                            <i class="ri-lock-line"></i>
+                        </div>
+                        <input type="password" id="confirm-password" placeholder="Confirm password" class="auth-input pl-10" required>
+                        <div class="w-10 h-10 flex items-center justify-center password-toggle" id="confirm-password-toggle">
+                            <i class="ri-eye-line"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <input type="checkbox" id="terms" class="custom-checkbox">
+                        <label for="terms" class="ml-2 text-sm text-gray-600 cursor-pointer">
+                            I agree to the <a href="#" class="text-primary hover:text-primary/80">Terms of Service</a> and <a href="#" class="text-primary hover:text-primary/80">Privacy Policy</a>
+                        </label>
+                    </div>
+                </div>
+
+                <button class="auth-btn">Sign Up</button>
+                <div class="relative flex items-center justify-center">
+                    <div class="border-t border-gray-200 absolute w-full"></div>
+                    <span class="bg-white px-4 text-sm text-gray-500 relative">or continue with</span>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3">
+                    <button class="social-btn">
+                        <div class="w-5 h-5 flex items-center justify-center">
+                            <i class="ri-google-fill"></i>
+                        </div>
+                        <span>Continue with Google</span>
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-6 bg-gray-50 text-center">
+            <p class="text-gray-600 text-sm" id="toggle-text">Don't have an account? <a href="#" id="toggle-link" class="text-primary font-medium hover:text-primary/80">Sign Up</a></p>
+        </div>
+    </div>
+
+    <script id="auth-toggle-script">
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginToggle = document.getElementById('login-toggle');
+            const signupToggle = document.getElementById('signup-toggle');
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleLink = document.getElementById('toggle-link');
+            function showLoginForm() {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+                loginToggle.classList.add('active');
+                signupToggle.classList.remove('active');
+                toggleText.innerHTML = 'Don\'t have an account? <a href="#" id="toggle-link" class="text-primary font-medium hover:text-primary/80">Sign Up</a>';
+                document.getElementById('toggle-link').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showSignupForm();
+                });
+            }
+
+            function showSignupForm() {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                loginToggle.classList.remove('active');
+                signupToggle.classList.add('active');
+                toggleText.innerHTML = 'Already have an account? <a href="#" id="toggle-link" class="text-primary font-medium hover:text-primary/80">Log In</a>';
+                document.getElementById('toggle-link').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showLoginForm();
+                });
+            }
+
+            loginToggle.addEventListener('click', showLoginForm);
+            signupToggle.addEventListener('click', showSignupForm);
+            toggleLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                showSignupForm();
+            });
+        });
+    </script>
+
+    <script id="password-toggle-script">
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePasswordVisibility = function(passwordId, toggleId) {
+                const passwordInput = document.getElementById(passwordId);
+                const toggleButton = document.getElementById(toggleId);
+                
+                toggleButton.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    const iconClass = type === 'password' ? 'ri-eye-line' : 'ri-eye-off-line';
+                    toggleButton.innerHTML = `<i class="${iconClass}"></i>`;
+                });
+            };
+
+            // Setup toggle for login password
+            togglePasswordVisibility('login-password', 'login-password-toggle');
+            
+            // Setup toggle for signup password
+            togglePasswordVisibility('signup-password', 'signup-password-toggle');
+            
+            // Setup toggle for confirm password
+            togglePasswordVisibility('confirm-password', 'confirm-password-toggle');
+        });
+    </script>
+</body>
+</html>
